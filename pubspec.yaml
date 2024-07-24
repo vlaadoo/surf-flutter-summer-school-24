@@ -7,8 +7,12 @@ environment:
   sdk: '>=3.4.3 <4.0.0'
 
 dependencies:
+  collection: ^1.18.0
+  elementary: ^3.0.0
+  elementary_helper: ^1.0.1
   flutter:
     sdk: flutter
+  http: ^1.2.2
   shared_preferences: ^2.2.3
   shimmer: ^3.0.0
 

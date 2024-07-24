@@ -1,5 +1,7 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
-import 'package:surf_flutter_summer_school_24/ui/colors/color_scheme.dart';
+import 'package:surf_flutter_summer_school_24/res/colors/color_scheme.dart';
 
 abstract class AppThemeData {
   static final lightTheme = ThemeData(

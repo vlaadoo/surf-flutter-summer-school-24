@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:surf_flutter_summer_school_24/feature/theme/di/theme_inherited.dart';
 

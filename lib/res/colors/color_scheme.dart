@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:surf_flutter_summer_school_24/ui/colors/color_palette.dart';
+import 'package:surf_flutter_summer_school_24/res/colors/color_palette.dart';
 
 const _skeletonOpacity = 0.06;
 
