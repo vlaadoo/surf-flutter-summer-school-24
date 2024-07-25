@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class ErrorScreen extends StatelessWidget {
   final VoidCallback onRetryPressed;
-  ErrorScreen({super.key, required this.onRetryPressed});
+  const ErrorScreen({super.key, required this.onRetryPressed});
 
   @override
   Widget build(BuildContext context) {

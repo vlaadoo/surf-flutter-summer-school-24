@@ -4,13 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:surf_flutter_summer_school_24/di/app_scope.dart';
 import 'package:surf_flutter_summer_school_24/ui/screens/gallery/gallery_screen.dart';
 import 'package:surf_flutter_summer_school_24/ui/screens/gallery/widgets/bottom_modal_widget.dart';
+import 'package:surf_flutter_summer_school_24/ui/screens/gallery/widgets/delete_confirmation_widget.dart';
 import 'package:surf_flutter_summer_school_24/ui/screens/picture_detail/picture_detail_screen.dart';
 import 'gallery_model.dart';
 import '../../../models/picture.dart';
 
-GalleryWidgetModel createGalleryWidgetModel(
-  BuildContext context,
-) {
+GalleryWidgetModel createGalleryWidgetModel(BuildContext context) {
   return GalleryWidgetModel(
     GalleryModel(appScope.pictureRepository, MediaQuery.of(context).size.width),
     MediaQuery.of(context).size.width,
@@ -20,15 +19,24 @@ GalleryWidgetModel createGalleryWidgetModel(
 abstract class IGalleryWidgetModel implements IWidgetModel {
   EntityStateNotifier<List<Picture>> get picturesState;
 
-  get screenWidth;
+  double get screenWidth;
 
-  get context;
+  BuildContext get context;
 
-  void onPictureTap(List<Picture> pics, int index) {}
+  void onPictureTap(List<Picture> pics, int index);
 
-  void showModalBottom({required context}) {}
+  void showModalBottom(
+      {required BuildContext context, required VoidCallback onUploadPhoto});
 
-  void onRetryPressed() {}
+  void onRetryPressed();
+
+  Future<void> uploadImage();
+
+  Future<void> updatePage();
+
+  Future<void> deletePicture(String name);
+
+  void showDeleteBottom({required VoidCallback deletePhoto});
 }
 
 class GalleryWidgetModel extends WidgetModel<GalleryScreen, GalleryModel>
@@ -39,10 +47,7 @@ class GalleryWidgetModel extends WidgetModel<GalleryScreen, GalleryModel>
   @override
   final double screenWidth;
 
-  GalleryWidgetModel(
-    super.model,
-    this.screenWidth,
-  );
+  GalleryWidgetModel(super.model, this.screenWidth);
 
   @override
   void initWidgetModel() {
@@ -68,6 +73,11 @@ class GalleryWidgetModel extends WidgetModel<GalleryScreen, GalleryModel>
   }
 
   @override
+  Future<void> uploadImage() {
+    return model.uploadPicture();
+  }
+
+  @override
   EntityStateNotifier<List<Picture>> get picturesState => _picturesState;
 
   @override
@@ -84,11 +94,12 @@ class GalleryWidgetModel extends WidgetModel<GalleryScreen, GalleryModel>
   }
 
   @override
-  void showModalBottom({required context}) {
+  void showModalBottom(
+      {required BuildContext context, required VoidCallback onUploadPhoto}) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return const BottomSheetWidget();
+        return BottomSheetWidget(onUploadPhoto: onUploadPhoto);
       },
     );
   }
@@ -96,5 +107,25 @@ class GalleryWidgetModel extends WidgetModel<GalleryScreen, GalleryModel>
   @override
   void onRetryPressed() {
     _loadPictures();
+  }
+
+  @override
+  Future<void> updatePage() {
+    return _loadPictures();
+  }
+
+  @override
+  Future<void> deletePicture(String name) {
+    return model.deletePicture(name);
+  }
+
+  @override
+  void showDeleteBottom({required VoidCallback deletePhoto}) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return DeleteConfirmationWidget(deletePhoto: deletePhoto);
+      },
+    );
   }
 }

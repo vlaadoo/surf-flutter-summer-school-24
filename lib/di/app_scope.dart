@@ -8,5 +8,7 @@ class AppScope extends ElementaryModel {
 }
 
 AppScope appScope = AppScope(
-  pictureRepository: PictureRepository(apiUrl: 'http://10.7.1.11:3000/'),
+  pictureRepository: PictureRepository(
+    yaToken: "token",
+  ),
 );

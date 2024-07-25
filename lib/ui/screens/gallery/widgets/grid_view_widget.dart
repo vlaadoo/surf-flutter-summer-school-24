@@ -24,6 +24,11 @@ class GridViewWidget extends StatelessWidget {
           onTap: () {
             wm.onPictureTap(photos, index);
           },
+          onLongPress: () {
+            wm.showDeleteBottom(deletePhoto: () {
+              wm.deletePicture(photos[index].title);
+            });
+          },
           child: Stack(
             children: [
               Shimmer.fromColors(

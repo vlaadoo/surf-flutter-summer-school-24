@@ -7,7 +7,7 @@ import 'gallery_wm.dart';
 import '../../../models/picture.dart';
 
 class GalleryScreen extends ElementaryWidget<IGalleryWidgetModel> {
-  GalleryScreen({Key? key}) : super(createGalleryWidgetModel, key: key);
+  const GalleryScreen({Key? key}) : super(createGalleryWidgetModel, key: key);
 
   @override
   Widget build(IGalleryWidgetModel wm) {
@@ -51,26 +51,34 @@ class GalleryScreen extends ElementaryWidget<IGalleryWidgetModel> {
           IconButton(
             icon: const Icon(Icons.more_vert),
             onPressed: () {
-              wm.showModalBottom(context: wm.context);
+              wm.showModalBottom(
+                context: wm.context,
+                onUploadPhoto: wm.uploadImage,
+              );
             },
           ),
         ],
       ),
-      body: EntityStateNotifierBuilder<List<Picture>>(
-        listenableEntityState: wm.picturesState,
-        loadingBuilder: (_, __) => const Center(
-            child: CircularProgressIndicator(
-          color: Colors.cyan,
-        )),
-        errorBuilder: (_, e, __) =>
-            ErrorScreen(onRetryPressed: wm.onRetryPressed),
-        builder: (_, pictures) {
-          if (pictures == null || pictures.isEmpty) {
-            return const Center(child: Text('No pictures available'));
-          }
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: wm.updatePage,
+          child: EntityStateNotifierBuilder<List<Picture>>(
+            listenableEntityState: wm.picturesState,
+            loadingBuilder: (_, __) => const Center(
+                child: CircularProgressIndicator(
+              color: Colors.cyan,
+            )),
+            errorBuilder: (_, e, __) =>
+                ErrorScreen(onRetryPressed: wm.onRetryPressed),
+            builder: (_, pictures) {
+              if (pictures == null || pictures.isEmpty) {
+                return const Center(child: Text('No pictures available'));
+              }
 
-          return GridViewWidget(photos: pictures, wm: wm);
-        },
+              return GridViewWidget(photos: pictures, wm: wm);
+            },
+          ),
+        ),
       ),
     );
   }

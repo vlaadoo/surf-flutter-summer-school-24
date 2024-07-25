@@ -17,7 +17,6 @@ void main() async {
   final themeController = ThemeController(
     themeRepository: themeRepository,
   );
-
   runApp(MyApp(
     themeController: themeController,
   ));
