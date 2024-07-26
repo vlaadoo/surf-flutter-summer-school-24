@@ -13,6 +13,7 @@ dependencies:
   elementary_helper: ^1.0.1
   flutter:
     sdk: flutter
+  flutter_svg: ^2.0.10+1
   http: ^1.2.2
   image_picker: ^1.1.2
   shared_preferences: ^2.2.3
@@ -27,3 +28,4 @@ flutter:
   uses-material-design: true
   assets: 
     - assets/images/
+    - assets/images/logo.svg

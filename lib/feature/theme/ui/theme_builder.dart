@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:surf_flutter_summer_school_24/feature/theme/di/theme_inherited.dart';
+import 'package:surf_flutter_summer_school_24/feature/theme/domain/theme_controller.dart';
 
 typedef ThemeWidgetBuilder = Widget Function(
   BuildContext context,
@@ -10,6 +11,7 @@ class ThemeBuilder extends StatefulWidget {
   const ThemeBuilder({
     required this.builder,
     super.key,
+    required ThemeController controller,
   });
 
   final ThemeWidgetBuilder builder;
