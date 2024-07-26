@@ -7,8 +7,17 @@ environment:
   sdk: '>=3.4.3 <4.0.0'
 
 dependencies:
+  collection: ^1.18.0
+  dio: ^5.5.0+1
+  elementary: ^3.0.0
+  elementary_helper: ^1.0.1
   flutter:
     sdk: flutter
+  flutter_svg: ^2.0.10+1
+  http: ^1.2.2
+  image_picker: ^1.1.2
+  shared_preferences: ^2.2.3
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -19,3 +28,4 @@ flutter:
   uses-material-design: true
   assets: 
     - assets/images/
+    - assets/images/logo.svg
