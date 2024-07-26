@@ -1,9 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:elementary_helper/elementary_helper.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:surf_flutter_summer_school_24/models/picture.dart';
+
+// ignore: unused_import
+import "dart:developer" as devtools show log;
 
 class PictureRepository {
   final String yaToken;
@@ -60,8 +64,64 @@ class PictureRepository {
     }
   }
 
+  Future<Picture> getUploadedPicture(String name) async {
+    final uri = Uri.https(
+      yandexBaseUrl,
+      "/v1/disk/resources",
+      {
+        "path": "photos/$name",
+        "fields": "name,sizes,modified",
+      },
+    );
+
+    late Picture uploadedPicture;
+    int attempts = 0;
+
+    while (attempts < 5) {
+      Future.delayed(const Duration(seconds: 1));
+      try {
+        final response = await http.get(
+          uri,
+          headers: {
+            HttpHeaders.authorizationHeader: "OAuth $yaToken",
+          },
+        );
+
+        if (response.statusCode == 200) {
+          final data = json.decode(response.body) as Map<String, dynamic>;
+
+          var originalUrl = data['sizes'].firstWhere(
+            (size) => size['name'] == 'ORIGINAL',
+            orElse: () => null,
+          );
+          if (originalUrl != null) {
+            uploadedPicture = Picture.fromJson(
+              {
+                'title': data['name'],
+                'url': originalUrl['url'],
+                'date': data['modified'],
+              },
+            );
+            break;
+          }
+        } else {
+          throw Exception('Failed to load JSON');
+        }
+      } catch (e) {
+        attempts++;
+      }
+    }
+
+    if (attempts == 5) {
+      throw Exception('Failed to get uploaded picture after 5 attempts');
+    }
+
+    return uploadedPicture;
+  }
+
 // ----------------------------------------------
-  Future<void> uploadImageToYandexCloud() async {
+  Future<void> uploadImageToYandexCloud(
+      EntityStateNotifier<List<Picture>> picturesState) async {
     // Получаем изображение
     final picker = ImagePicker();
     final imageFromGallery =
@@ -102,9 +162,17 @@ class PictureRepository {
       'file': await MultipartFile.fromFile(file.path),
     });
     dio.put(linkToUpload, data: formData);
+
+    List<Picture>? existingPics = picturesState.value.data;
+    existingPics?.add(await getUploadedPicture(name));
+    picturesState.content(existingPics!.toList());
   }
 
-  Future<void> deleteImage(String name) async {
+// -----------
+  Future<void> deleteImage(
+    String name,
+    EntityStateNotifier<List<Picture>> picturesState,
+  ) async {
     final uri = Uri.https(
       yandexBaseUrl,
       "/v1/disk/resources",
@@ -119,5 +187,8 @@ class PictureRepository {
         HttpHeaders.authorizationHeader: "OAuth $yaToken",
       },
     );
+    List<Picture>? existingPics = picturesState.value.data;
+    existingPics?.removeWhere((element) => element.title == name);
+    picturesState.content(existingPics!.toList());
   }
 }

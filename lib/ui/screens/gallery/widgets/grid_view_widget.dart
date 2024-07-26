@@ -13,8 +13,8 @@ class GridViewWidget extends StatelessWidget {
     return GridView.builder(
       cacheExtent: 50,
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: wm.columns,
         mainAxisSpacing: 5,
         crossAxisSpacing: 3,
       ),
@@ -38,12 +38,15 @@ class GridViewWidget extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              FadeInImage.assetNetwork(
-                placeholder: "assets/images/placeholder.png",
-                image: photos[index].imageUrl,
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: double.infinity,
+              Hero(
+                tag: photos[index].hashCode,
+                child: FadeInImage.assetNetwork(
+                  placeholder: "assets/images/placeholder.png",
+                  image: photos[index].imageUrl,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: double.infinity,
+                ),
               ),
             ],
           ),

@@ -72,41 +72,43 @@ class PictureDetailScreen extends ElementaryWidget<IPictureDetailWidgetModel> {
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 2),
                       child: ClipRRect(
-                        child: Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            Image.network(picture.imageUrl,
-                                fit: BoxFit.contain),
-                            if (wm.currentPageNotifier.value != index)
-                              BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                                child: Container(
-                                  color: Colors.black.withOpacity(0),
+                        child: InteractiveViewer(
+                          clipBehavior: Clip.none,
+                          panEnabled: true,
+                          minScale: 1.0,
+                          maxScale: 2.0,
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              if (wm.currentPageNotifier.value != index)
+                                BackdropFilter(
+                                  filter:
+                                      ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                                  child: Container(
+                                    color: Colors.black.withOpacity(0),
+                                  ),
                                 ),
-                              )
-                          ],
+                              if (wm.currentPageNotifier.value == index)
+                                Hero(
+                                  tag: picture.hashCode,
+                                  child: Image.network(
+                                    picture.imageUrl,
+                                    fit: BoxFit.contain,
+                                  ),
+                                )
+                              else
+                                Image.network(
+                                  picture.imageUrl,
+                                  fit: BoxFit.contain,
+                                ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   );
                 },
               );
-              // return Center(
-              //   child: Column(
-              //     children: [
-              //       Expanded(
-              //         child: Padding(
-              //           padding: const EdgeInsets.symmetric(horizontal: 16),
-              //           child: ClipRRect(
-              //             borderRadius: BorderRadius.circular(16),
-              //             child:
-              //                 Image.network(picture.imageUrl, fit: BoxFit.contain),
-              //           ),
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // );
             },
           );
         },

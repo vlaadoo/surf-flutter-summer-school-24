@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 
-class ErrorScreen extends StatelessWidget {
+class CustomErrorWidget extends StatelessWidget {
   final VoidCallback onRetryPressed;
-  const ErrorScreen({super.key, required this.onRetryPressed});
+  const CustomErrorWidget({super.key, required this.onRetryPressed});
 
   @override
   Widget build(BuildContext context) {

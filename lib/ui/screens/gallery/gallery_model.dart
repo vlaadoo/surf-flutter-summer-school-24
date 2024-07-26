@@ -1,4 +1,5 @@
 import 'package:elementary/elementary.dart';
+import 'package:elementary_helper/src/relations/notifier/entity_state_notifier.dart';
 import '../../../models/picture.dart';
 import '../../../repositories/picture_repository.dart';
 
@@ -11,11 +12,12 @@ class GalleryModel extends ElementaryModel {
     return _pictureRepository.getPictures();
   }
 
-  Future<void> uploadPicture() {
-    return _pictureRepository.uploadImageToYandexCloud();
+  Future<void> uploadPicture(EntityStateNotifier<List<Picture>> picturesState) {
+    return _pictureRepository.uploadImageToYandexCloud(picturesState);
   }
 
-  Future<void> deletePicture(String name) async {
-    return await _pictureRepository.deleteImage(name);
+  Future<void> deletePicture(
+      String name, EntityStateNotifier<List<Picture>> picturesState) async {
+    return await _pictureRepository.deleteImage(name, picturesState);
   }
 }

@@ -37,12 +37,26 @@ abstract class IGalleryWidgetModel implements IWidgetModel {
   Future<void> deletePicture(String name);
 
   void showDeleteBottom({required VoidCallback deletePhoto});
+
+  int get columns;
+
+  void increaseColumns();
+
+  void decreaseColumns();
+
+  DateTime get lastScaleChange;
+
+  void updateLastScaleChangeTime(DateTime now) {}
 }
 
 class GalleryWidgetModel extends WidgetModel<GalleryScreen, GalleryModel>
     implements IGalleryWidgetModel {
   final EntityStateNotifier<List<Picture>> _picturesState =
       EntityStateNotifier<List<Picture>>();
+
+  int _columns = 3; // Initial number of columns
+
+  DateTime _lastScaleChange = DateTime.now();
 
   @override
   final double screenWidth;
@@ -74,7 +88,7 @@ class GalleryWidgetModel extends WidgetModel<GalleryScreen, GalleryModel>
 
   @override
   Future<void> uploadImage() {
-    return model.uploadPicture();
+    return model.uploadPicture(_picturesState);
   }
 
   @override
@@ -116,7 +130,7 @@ class GalleryWidgetModel extends WidgetModel<GalleryScreen, GalleryModel>
 
   @override
   Future<void> deletePicture(String name) {
-    return model.deletePicture(name);
+    return model.deletePicture(name, _picturesState);
   }
 
   @override
@@ -127,5 +141,34 @@ class GalleryWidgetModel extends WidgetModel<GalleryScreen, GalleryModel>
         return DeleteConfirmationWidget(deletePhoto: deletePhoto);
       },
     );
+  }
+
+  @override
+  int get columns => _columns;
+
+  @override
+  void increaseColumns() {
+    if (_columns < 4) {
+      _columns++;
+      print(_columns);
+    }
+    _picturesState.notifyListeners();
+  }
+
+  @override
+  void decreaseColumns() {
+    if (_columns > 1) {
+      _columns--;
+      print(_columns);
+      _picturesState.notifyListeners();
+    }
+  }
+
+  @override
+  DateTime get lastScaleChange => _lastScaleChange;
+
+  @override
+  void updateLastScaleChangeTime(DateTime now) {
+    _lastScaleChange = now;
   }
 }

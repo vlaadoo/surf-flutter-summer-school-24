@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:surf_flutter_summer_school_24/feature/theme/di/theme_inherited.dart';
 
 class DeleteConfirmationWidget extends StatelessWidget {
   final VoidCallback deletePhoto;
@@ -29,7 +28,10 @@ class DeleteConfirmationWidget extends StatelessWidget {
               color: Colors.red,
             ),
             title: const Text('УДАЛИТЬ', style: TextStyle(color: Colors.red)),
-            onTap: deletePhoto,
+            onTap: () {
+              deletePhoto();
+              Navigator.pop(context);
+            },
           ),
         ],
       ),
